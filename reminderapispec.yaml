@@ -1,0 +1,297 @@
+swagger: '2.0'
+info:
+  version: 0.0.1-SNAPSHOT
+  title: Voice-Assistant Reminder-Skill API.
+  description: >-
+    This is the MBition Hybrid Cloud Platform Voice-Assistant Reminder-Skill REST API, which handles reminders for the Mercedes Benz Voice-Assistant Platform.
+host: 'localhost:8080'
+basePath: /
+schemes:
+  - https
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /dummies/foo:
+    get:
+      summary: Returns the string "foo" followed by the given number.
+      description: >
+        This is a dummy endpoint returning the string "foo" followed by the number given as query parameter "bar".
+      operationId: foo
+      tags:
+        - Dummies
+      parameters:
+        - name: bar
+          in: query
+          description: a number to be appended to the response.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK.
+          schema:
+            $ref: '#/definitions/DummyResponse'
+  /api/reminders:
+    get:
+      summary: Get Reminders
+      operationId: getReminders
+      parameters:
+        - type: string
+          in: query
+          name: id
+          description: Id of reminder
+        - type: string
+          in: query
+          name: remind_on_date
+          description: Date of reminder
+      description: Returns the reminders in response based on query params.
+      tags:
+        - reminders
+      responses:
+        '200':
+          description: OK
+          schema:
+            description: ''
+            type: object
+            properties:
+              data:
+                type: array
+                uniqueItems: true
+                minItems: 1
+                items:
+                  required:
+                    - id
+                    - title
+                    - category
+                    - channel
+                    - channel_id
+                    - remind_on_date
+                    - snoozed
+                    - created_date
+                    - updated_date
+                    - created_channel
+                    - updated_channel
+                  properties:
+                    id:
+                      type: number
+                    title:
+                      type: string
+                      minLength: 1
+                    notes: {}
+                    category:
+                      type: string
+                      minLength: 1
+                    channel:
+                      type: string
+                      minLength: 1
+                    channel_id:
+                      type: string
+                      minLength: 1
+                    remind_on_date:
+                      type: string
+                      minLength: 1
+                    snoozed:
+                      type: boolean
+                    created_date:
+                      type: string
+                      minLength: 1
+                    updated_date:
+                      type: string
+                      minLength: 1
+                    created_channel:
+                      type: string
+                      minLength: 1
+                    updated_channel:
+                      type: string
+                      minLength: 1
+            required:
+              - data
+    post:
+      summary: Create Reminders
+      operationId: createReminder
+      tags:
+        - reminders
+      description: create the reminders based on request body.
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/RequestPayload'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ResponsePayload'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    parameters: []
+    delete:
+      summary: Delete Reminders
+      operationId: deleteReminders
+      tags:
+        - reminders
+      parameters:
+        - type: string
+          in: query
+          name: id
+          description: Id of reminder
+        - type: string
+          in: query
+          name: remind_on_date
+          description: Date of reminder
+      description: Delete the reminders in response based on query params.
+      responses:
+        '200':
+          description: OK
+          schema:
+            description: ''
+            type: object
+            properties:
+              message:
+                type: string
+                minLength: 1
+            required:
+              - message
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      summary: Update Reminders
+      operationId: updateReminder
+      tags:
+        - reminders
+      description: update the reminder
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/RequestPayload'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ResponsePayload'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+tags:
+  - name: reminders
+definitions:
+  RequestPayload:
+    description: 'Contains a request for reminder creation and updation'
+    type: object
+    properties:
+      title:
+        type: string
+        minLength: 1
+      notes:
+        type: string
+      category:
+        type: string
+        minLength: 1
+      channel:
+        type: string
+        minLength: 1
+      channel_id:
+        type: string
+        minLength: 1
+      remind_on_date:
+        type: string
+        minLength: 1
+    required:
+      - title
+      - notes
+      - category
+      - channel
+      - channel_id
+      - remind_on_date
+  ResponsePayload:
+    description: 'Contains a response for reminder create and update request'
+    type: object
+    properties:
+      id:
+        type: number
+      title:
+        type: string
+        minLength: 1
+      notes: {}
+      category:
+        type: string
+        minLength: 1
+      channel:
+        type: string
+        minLength: 1
+      channel_id:
+        type: string
+        minLength: 1
+      remind_on_date:
+        type: string
+        minLength: 1
+      snoozed:
+        type: boolean
+      created_date:
+        type: string
+        minLength: 1
+      updated_date:
+        type: string
+        minLength: 1
+      created_channel:
+        type: string
+        minLength: 1
+      updated_channel:
+        type: string
+        minLength: 1
+    required:
+      - id
+      - title
+      - category
+      - channel
+      - channel_id
+      - remind_on_date
+      - snoozed
+      - created_date
+      - updated_date
+      - created_channel
+      - updated_channel
+  ErrorResponse:
+    description: 'Contains a response for error scenario'
+    type: object
+    properties:
+      code:
+        type: string
+        minLength: 1
+      message:
+        type: string
+        minLength: 1
+    required:
+      - code
+      - message
+  DummyResponse:
+    type: object
+    description: >
+      Contains a response for dummy endpoint requests.
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        description: The actual response data.
+        example: foo 1234
